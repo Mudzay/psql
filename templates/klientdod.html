@@ -1,0 +1,16 @@
+{% extends "root.html" %}
+{% block title %}
+    Dodawanie klienta
+{% endblock title %}
+
+{% block content %}
+    <form action="{{url_for('klientdod')}}" method="post">
+        <div class="form-group">
+            <label for="imie">Imię</label>
+            <input type="text" class="form-control" id="imie" name="imie" required>
+            <label for="nazwisko">Nazwisko</label>
+            <input type="text" class="form-control" id="nazwisko" name="nazwisko" required>
+            <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+    </form>
+{% endblock content %}

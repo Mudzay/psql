@@ -1,0 +1,21 @@
+<html>
+<head>
+{% block head2 %}
+
+{% endblock head2 %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class='d-flex justify-content-center'>
+    <a href="/"> <img src="{{url_for('static', filename='logo.png')}}"/> </a>
+</div>
+<div class='d-flex justify-content-center'>
+<h1>
+{% block title %}
+{% endblock title %}
+</h1>
+</div>
+{% block content %}
+{% endblock content %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends "root.html" %}
+
+{% block title %}
+    Gatunki
+{% endblock title %}
+
+{% block content %}
+    <div class="d-flex justify-content-around flex-wrap bd-highlight">
+        {% for gat in rows %}        
+        <div class="p-2 bd-highlight">{{ gat[1] }}</div>
+        {% endfor %}
+    </div>
+    <form action="{{ url_for('gatunki') }}" method="post">
+        <div class="form-group">
+            <label for="gat">Gatunek:</label>
+            <input type="text" class="form-control" id="gat" name="gat" placeholder="Nazwa nowego gatunku...">
+        </div>
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+    </form>
+{% endblock content %}  

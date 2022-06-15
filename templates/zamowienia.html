@@ -1,0 +1,35 @@
+{% extends "root.html" %}
+
+{% block title %}
+    Zamowienia
+{% endblock title %}
+
+{% block content %}
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            {% for colname in colnames %}
+                <th>{{ colname }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+            <tr>
+                {% for col in row %}
+                    <td>{{ col }}</td>
+                {% endfor %}
+                <td>
+                <div class="btn-group">
+                    <form action="{{ url_for('delzam') }}" method="post">
+                        <input type="hidden" name="id" value="{{ row[0] }}">
+                        <button type="submit" class="btn btn-danger">Usuń</button>
+                    </form>
+                </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <a href="{{ url_for('nowe_zamowienie') }}" class="btn btn-primary">Dodaj</a>
+{% endblock content %}

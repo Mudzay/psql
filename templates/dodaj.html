@@ -1,0 +1,30 @@
+{% extends "root.html" %}
+{% block title %}
+    Dodawanie towaru
+{% endblock title %}
+
+{% block content %}
+    <form action="{{url_for('dodaj')}}" method="post">
+        <div class="form-group">
+            <label for="nazwa">Nazwa</label>
+            <input type="text" class="form-control" id="nazwa" name="nazwa" required>
+            <label for="kat">Kategoria</label>
+            <select class="form-control" name="kat" required>
+                {% for k in kat %}
+                    <option value="{{k[0]}}">{{k[1]}}</option>
+                {% endfor %}
+            </select>
+            <label for="gat">Gatunek</label>
+            <select class="form-control" name="gat" required>
+                {% for g in gat %}
+                    <option value="{{g[0]}}">{{g[1]}}</option>
+                {% endfor %}
+            </select>
+            <label for="ilosc">Ilość</label>
+            <input type="number" class="form-control" id="ilosc" name="ilosc" max="2147483647" required>
+            <label for="cena">Cena</label>
+            <input type="number" class="form-control" id="cena" name="cena" step="0.01" max="2147483647" required>
+            <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+    </form>
+{% endblock content %}

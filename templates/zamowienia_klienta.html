@@ -1,0 +1,31 @@
+{% extends "root.html" %}
+
+{% block title %}
+    Zamowienia klienta {{id}}
+{% endblock title %}
+
+{% block content %}
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            {% for colname in colnames %}
+                <th>{{ colname }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+            <tr>
+                {% for col in row %}
+                    <td>{{ col }}</td>
+                {% endfor %}
+                <td>
+                    <form action="{{ url_for('delzam') }}" method="post">
+                        <input type="hidden" name="id" value="{{ row[0] }}">
+                        <button type="submit" class="btn btn-danger">Usuń</button>
+                    </form>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends "root.html" %}
+
+    {% block title %}
+        <h1> SKLEP ZOOLOGICZNY 'ZOOPOLEX'</h1>
+    {% endblock title %}
+
+    {% block content %}
+    <div class="list-group text-center"">
+        <a href="{{url_for('magazyn')}}" class="list-group-item list-group-item-action">Magazyn</a>
+        <a href="{{url_for('zamowienia')}}" class="list-group-item list-group-item-action">Zamówienia</a>
+        <a href="{{url_for('klienci')}}" class="list-group-item list-group-item-action">Klienci</a>
+        <a href="{{url_for('kategorie')}}" class="list-group-item list-group-item-action">Kategorie</a>
+        <a href="{{url_for('gatunki')}}" class="list-group-item list-group-item-action">Gatunki</a>
+    </div>
+    {% endblock content %}
+

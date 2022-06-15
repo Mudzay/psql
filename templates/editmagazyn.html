@@ -1,0 +1,39 @@
+{% extends "root.html" %}
+{% block title %}
+    Edycja towaru
+{% endblock title %}
+
+{% block content %}
+    <form action="{{url_for('editmagazyn')}}" method="post">
+        <div class="form-group">
+            <label for="nazwa">Nazwa</label>
+            <input type="text" class="form-control" id="nazwa" name="nazwa" value="{{row[1]}}" required>
+            <label for="kat">Kategoria</label>
+            <select class="form-control" name="kat" required>
+                {% for k in kat %}
+                    {% if k[1] == row[2] %}
+                        <option value="{{k[0]}}" selected>{{k[1]}}</option>
+                    {% else %}
+                        <option value="{{k[0]}}">{{k[1]}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <label for="gat">Gatunek</label>
+            <select class="form-control" name="gat" required>
+                {% for g in gat %}
+                    {% if g[1] == row[3] %}
+                        <option value="{{g[0]}}" selected>{{g[1]}}</option>
+                    {% else %}
+                        <option value="{{g[0]}}">{{g[1]}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <label for="ilosc">Ilość</label>
+            <input type="number" class="form-control" id="ilosc" name="ilosc" value="{{row[4]}}" max="2147483647" required>
+            <label for="cena">Cena</label>
+            <input type="number" class="form-control" id="cena" name="cena" value="{{row[5]}}" max="2147483647" required>
+            <input type="hidden" name="id" value="{{row[0]}}">
+            <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+    </form>
+{% endblock content %}

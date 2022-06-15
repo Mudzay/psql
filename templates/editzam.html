@@ -1,0 +1,57 @@
+{% extends "root.html" %}
+{% block title %}
+    Edytowanie zamówienia
+{% endblock title %}
+
+{% block head2 %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+    $(function(){
+        $("#co").select2();
+        }); 
+    </script>
+{% endblock head2 %}
+
+{% block content %}
+    <form action="{{url_for('editzam')}}" method="post" onsubmit="return confirm('Na pewno? Suma: ' + cena()) + 'zł'">
+        <div class="form-group">
+        <h3>Towar:  {{co[row[2]][1]}} ({{co[row[2]][4]}} sztuk, {{co[row[2]][7]}}zł)[{{co[row[2]][5]}}][{{co[row[2]][6]}}]</h3>
+            <label for="kto">Kto:</label>
+            <select name="kto" id="kto" class="form-control" data-live-search="true" required>
+                {% for kto in kto %}
+                    {% if kto[0] == row[1] %}
+                        <option value="{{kto[0]}}" selected>{{kto[1]}}</option>
+                    {% else %}
+                        <option value="{{kto[0]}}">{{kto[1]}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input type="hidden" name="co" value="{{row[2]}}">
+            <label for="ile">Ilość:</label>
+            <input type="number" name="ile" id="ile" class="form-control" min="1" max="{{co[row[2]][4]}}" value="{{row[3]}}" required>
+            <script>
+                function getMax(){
+                    var elem = document.getElementById('co');
+                    var max = parseInt(elem.options[elem.selectedIndex].getAttribute('max-custom'));
+                    var ile = document.getElementById('ile');
+                    ile.max = {{row[3]}} + max;
+                }
+                getMax();
+                
+                document.getElementById("ile").onchange = getMax;
+            </script>
+        </div>
+        <input type="hidden" name="id" value="{{row[0]}}">
+        <button type="submit" class="btn btn-primary">Zapisz</button>
+        <script>
+            function cena(){
+                    var elem = document.getElementById('co');
+                    var max = parseFloat(elem.options[elem.selectedIndex].getAttribute('cena'));
+                    var ile = document.getElementById('ile');
+                    return max * ile.value;
+                }
+        </script>
+    </form>
+{% endblock content %}

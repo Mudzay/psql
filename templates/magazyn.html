@@ -1,0 +1,31 @@
+{% extends "root.html" %}
+
+{% block title %}
+    Magazyn
+{% endblock title %}
+
+{% block content %}
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            {% for colname in colnames %}
+                <th>{{ colname }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+            <tr>
+                {% for col in row %}
+                    <td>{{ col }}</td>
+                {% endfor %}
+                <td>
+                    <a href="{{ url_for('editmagazyn', id=row[0]) }}" class="btn">Edytuj</a>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <form action="{{ url_for('dodaj') }}" method="GET">
+        <input type="submit" class="btn btn-success" value="Dodaj">
+    </form>
+{% endblock content %}

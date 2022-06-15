@@ -1,0 +1,17 @@
+{% extends "root.html" %}
+{% block title %}
+    Edycja klienta {{row[0]}}
+{% endblock title %}
+
+{% block content %}
+    <form action="{{url_for('klientedit')}}" method="post">
+        <div class="form-group">
+            <label for="imie">Imię</label>
+            <input type="text" class="form-control" id="imie" name="imie" value="{{row[1]}}" required>
+            <label for="nazwisko">Nazwisko</label>
+            <input type="text" class="form-control" id="nazwisko" name="nazwisko" value="{{row[2]}}" required>
+            <input type="hidden" name="id" value="{{row[0]}}">
+            <input type="submit" class="btn btn-primary" value="Zapisz">
+        </div>
+    </form>
+{% endblock content %}

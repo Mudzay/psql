@@ -1,0 +1,20 @@
+{% extends "root.html" %}
+
+{% block title %}
+    Kategorie
+{% endblock title %}
+
+{% block content %}
+    <div class="d-flex justify-content-around flex-wrap bd-highlight">
+        {% for kat in rows %}        
+        <div class="p-2 bd-highlight">{{ kat[1] }}</div>
+        {% endfor %}
+    </div>
+    <form action="{{ url_for('kategorie') }}" method="post">
+        <div class="form-group">
+            <label for="kat">Kategoria:</label>
+            <input type="text" class="form-control" id="kat" name="kat" placeholder="Nazwa nowej kategorii...">
+        </div>
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+    </form>
+{% endblock content %}  
