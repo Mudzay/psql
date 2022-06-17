@@ -1,5 +1,13 @@
 -- Adminer 4.8.1 PostgreSQL 12.6 (Ubuntu 12.6-0ubuntu0.20.04.1) dump
 
+DROP VIEW IF EXISTS "_klienci";
+CREATE TABLE "_klienci" ("id" integer, "klient" text);
+
+
+DROP VIEW IF EXISTS "_towar";
+CREATE TABLE "_towar" ("id" integer, "nazwa" character varying(255), "kid" integer, "gid" integer, "stan" integer, "kategoria" character varying(255), "gatunek" character varying(255), "cena" double precision);
+
+
 DROP TABLE IF EXISTS "gatunki";
 DROP SEQUENCE IF EXISTS gatunki_id_seq;
 CREATE SEQUENCE gatunki_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
@@ -44,7 +52,10 @@ INSERT INTO "kategorie" ("id", "kat") VALUES
 (15,	'witaminy'),
 (16,	'książka'),
 (17,	'akcesoria'),
-(18,	'szczotka');
+(18,	'szczotka'),
+(19,	'przysmakl'),
+(21,	'dadaw'),
+(22,	'saf');
 
 DROP TABLE IF EXISTS "klient";
 DROP SEQUENCE IF EXISTS klient_id_seq;
@@ -84,7 +95,6 @@ CREATE TABLE "public"."magazyn" (
 ) WITH (oids = false);
 
 INSERT INTO "magazyn" ("id", "nazwa", "kategoria", "gatunek", "stan", "cena") VALUES
-(1,	'Topinambur',	4,	1,	6,	5.99),
 (2,	'Korzeń mniszka',	1,	1,	3,	6.99),
 (3,	'Woliera maxi+',	2,	1,	6,	2137),
 (4,	'Piłka',	3,	2,	70,	10),
@@ -93,7 +103,8 @@ INSERT INTO "magazyn" ("id", "nazwa", "kategoria", "gatunek", "stan", "cena") VA
 (10,	'Czapeczka',	13,	3,	1,	1),
 (7,	'Jak nie dać szynszylom zawładnąć nad sobą?',	16,	1,	2,	30000),
 (8,	'Miska duża',	12,	5,	7,	23.5),
-(6,	'piłka',	3,	5,	17,	15.99);
+(6,	'piłka',	3,	5,	17,	15.99),
+(1,	'Topinambur',	4,	1,	6,	5.99);
 
 DROP VIEW IF EXISTS "pokaz_mi_swoje_towary";
 CREATE TABLE "pokaz_mi_swoje_towary" ("id" integer, "nazwa" character varying(255), "kategoria" character varying(255), "gatunek" character varying(255), "stan" integer, "cena" double precision);
@@ -143,6 +154,25 @@ ALTER TABLE ONLY "public"."magazyn" ADD CONSTRAINT "magazyn_kat" FOREIGN KEY (ka
 ALTER TABLE ONLY "public"."zamowienie" ADD CONSTRAINT "zamowienie_co" FOREIGN KEY (co) REFERENCES magazyn(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."zamowienie" ADD CONSTRAINT "zamowienie_kto" FOREIGN KEY (kto) REFERENCES klient(id) NOT DEFERRABLE;
 
+DROP TABLE IF EXISTS "_klienci";
+CREATE VIEW "_klienci" AS SELECT klient.id,
+    concat_ws(' '::text, klient.id, '-', klient.imie, klient.nazwisko) AS klient
+   FROM klient;
+
+DROP TABLE IF EXISTS "_towar";
+CREATE VIEW "_towar" AS SELECT m.id,
+    m.nazwa,
+    m.kategoria AS kid,
+    m.gatunek AS gid,
+    m.stan,
+    k.kat AS kategoria,
+    g.nazwa AS gatunek,
+    m.cena
+   FROM ((magazyn m
+     JOIN kategorie k ON ((m.kategoria = k.id)))
+     JOIN gatunki g ON ((m.gatunek = g.id)))
+  ORDER BY m.stan DESC;
+
 DROP TABLE IF EXISTS "pokaz_mi_swoje_towary";
 CREATE VIEW "pokaz_mi_swoje_towary" AS SELECT m.id,
     m.nazwa,
@@ -166,4 +196,4 @@ CREATE VIEW "wyswietl_zamowienia" AS SELECT z.id,
      JOIN klient k ON ((z.kto = k.id)))
      JOIN magazyn m ON ((z.co = m.id)));
 
--- 2022-06-16 00:54:09.977204+02
+-- 2022-06-17 20:55:07.182623+02

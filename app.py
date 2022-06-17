@@ -1,27 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for
 import psycopg2
 
-# Create a Flask application
 app = Flask(__name__)
 
-# Create a connection to the database
 conn = psycopg2.connect("dbname=db_g218 user=g218 password=C9C6_65fdf8 host=psql01.mikr.us")
 
-# Create a cursor object for executing queries
 cur = conn.cursor()
 
-# Create a route for the default URL, which is http://localhost:5000/
 @app.route('/')
 def index():
     return render_template('index.html')
 
 def dane(nazwa):
+    '''
+        Funkcja służy do zwracania wszystkich wierszy oraz nazw kolumn z wybranej tabeli.
+    '''
     cur.execute(f"SELECT * FROM {nazwa} ORDER BY id")
     rows = cur.fetchall()
     colnames = [desc[0] for desc in cur.description]
     return (rows, colnames)
 
 def jeden(nazwa, id):
+    '''
+        Funkcja służy do zwracania jednego wiersza o podanym id z wybranej tabeli oraz nazw kolumn.
+    '''
     cur.execute(f"SELECT * FROM {nazwa} WHERE id = {id}")
     row = cur.fetchone()
     colnames = [desc[0] for desc in cur.description]
@@ -29,15 +31,17 @@ def jeden(nazwa, id):
 
 @app.route('/magazyn')
 def magazyn():
-    # get rows and column names from view pokaz_mi_swoje_towary
     rows, colnames = dane("pokaz_mi_swoje_towary")
     return render_template('magazyn.html', rows=rows, colnames=colnames)
 
+
 def katgat():
-    #get rows from table kategorie
+    '''
+        Funkcja służy do zawracania kategorii, gatunków oraz ich id.
+        Stworzyłem ją, ponieważ używam tego samego kodu wiele razy.
+    '''
     cur.execute("SELECT * FROM kategorie")
     kat = cur.fetchall()
-    #get rows from table gatunki
     cur.execute("SELECT * FROM gatunki")
     gat = cur.fetchall()
     return (kat, gat)
@@ -46,15 +50,12 @@ def katgat():
 @app.route('/editmagazyn', methods=['GET', 'POST'])
 def editmagazyn():
     if request.method == 'POST':
-        # get the id of the row to be updated
         id = request.form['id']
-        # get the new values
         nazwa = request.form['nazwa']
         kat = request.form['kat']
         gat = request.form['gat']
         ilosc = request.form['ilosc']
         cena = request.form['cena']
-        # update the row in the database
         cur.execute("UPDATE magazyn SET nazwa = '%s', kategoria = %s, gatunek = %s, stan = %s, cena = %s WHERE id = %s" % (nazwa, kat, gat, ilosc, cena, id))
         conn.commit()
         return redirect(url_for('magazyn'))
@@ -62,21 +63,14 @@ def editmagazyn():
         id = request.args.get('id', default=None)
         if id is None:
             return redirect(url_for('magazyn'))
-        # get row from view pokaz_mi_swoje_towary
-        cur.execute("SELECT * FROM pokaz_mi_swoje_towary WHERE id = %s", (id,))
         row, colnames = jeden("pokaz_mi_swoje_towary", id)
-        #get row 'kat' from table 'kategorie'
         kat, gat = katgat()
         return render_template('editmagazyn.html', row=row, colnames=colnames, kat=kat, gat=gat)
 
 @app.route('/zamowienia')
 def zamowienia():
-    # get rows and column names from view wyswietl_zamowienia
     rows, colnames = dane('wyswietl_zamowienia')
     return render_template('zamowienia.html', rows=rows, colnames=colnames)
-
-
-    
 
 @app.route('/delzam', methods=['POST'])
 def delzam():
@@ -88,13 +82,11 @@ def delzam():
 @app.route('/dodaj', methods=['GET', 'POST'])
 def dodaj():
     if request.method == 'POST':
-        # get the new values
         nazwa = request.form['nazwa']
         kat = request.form['kat']
         gat = request.form['gat']
         ilosc = request.form['ilosc']
         cena = request.form['cena']
-        # insert the row in the database
         cur.execute("INSERT INTO magazyn (nazwa, kategoria, gatunek, stan, cena) VALUES ('%s', %s, %s, %s, %s)" % (nazwa, kat, gat, ilosc, cena))
         conn.commit()
         return redirect(url_for('magazyn'))
@@ -104,20 +96,16 @@ def dodaj():
 
 @app.route('/klienci')
 def klienci():
-    #get rows and column names from table 'klient'
     rows, colnames = dane('klient')
     return render_template('klienci.html', rows=rows, colnames=colnames)
 
 @app.route('/klientedit', methods=['GET', 'POST'])
 def klientedit():
     if request.method == 'POST':
-        # get the id of the row to be updated
         id = request.form['id']
-        # get the new values
         imie = request.form['imie']
         nazwisko = request.form['nazwisko']
 
-        # update the row in the database
         cur.execute("UPDATE klient SET imie = '%s', nazwisko = '%s' WHERE id = %s" % (imie, nazwisko, id))
         conn.commit()
         return redirect(url_for('klienci'))
@@ -125,7 +113,6 @@ def klientedit():
         id = request.args.get('id', default=None)
         if id is None:
             return redirect(url_for('klienci'))
-        # get row from table 'klient'
         cur.execute("SELECT * FROM klient WHERE id = %s", (id,))
         row, colnames = jeden("klient", id)
         return render_template('klientedit.html', row=row, colnames=colnames)
@@ -135,18 +122,24 @@ def klientdel():
     id = request.args.get('id', default=None)
     if id is None:
         return redirect(url_for('klienci'))
-    # delete row from table 'klient'
     cur.execute("DELETE FROM klient WHERE id = %s", (id,))
     conn.commit()
     return redirect(url_for('klienci'))
 
+@app.route('/usun', methods=['GET', 'POST'])
+def usun():
+    id = request.args.get('id', default=None)
+    if id is None:
+        return redirect(url_for('magazyn'))
+    cur.execute("DELETE FROM magazyn WHERE id = %s", (id,))
+    conn.commit()
+    return redirect(url_for('magazyn'))
+
 @app.route('/klientdod', methods=['GET', 'POST'])
 def klientdod():
     if request.method == 'POST':
-        # get the new values
         imie = request.form['imie']
         nazwisko = request.form['nazwisko']
-        # insert the row in the database
         cur.execute("INSERT INTO klient (imie, nazwisko) VALUES ('%s', '%s')" % (imie, nazwisko))
         conn.commit()
         return redirect(url_for('klienci'))
@@ -164,16 +157,19 @@ def zamowienia_klienta():
     return render_template('zamowienia_klienta.html', rows=rows, colnames=colnames, id=id)
 
 def ktoc():
-    cur.execute("SELECT id, concat_ws(' ', id, '-', imie, nazwisko) FROM klient")
+    '''
+        Funkcja zwraca listę klientów oraz towarów.
+    '''
+    cur.execute("SELECT * FROM _klienci")
     kto = cur.fetchall()
-    cur.execute("SELECT m.id, m.nazwa, m.kategoria, m.gatunek, m.stan, k.kat, g.nazwa, m.cena FROM magazyn m JOIN kategorie k ON m.kategoria = k.id JOIN gatunki g ON m.gatunek = g.id ORDER BY stan DESC")
+    cur.execute("SELECT * FROM _towar")
     co = cur.fetchall()
     return kto, co
 
 def ktoc1(id):
-    cur.execute("SELECT id, concat_ws(' ', id, '-', imie, nazwisko) FROM klient WHERE id = %s" % (id,))
+    cur.execute("SELECT * FROM _klienci WHERE id = %s" % (id,))
     kto = cur.fetchone()
-    cur.execute("SELECT m.id, m.nazwa, m.kategoria, m.gatunek, m.stan, k.kat, g.nazwa, m.cena FROM magazyn m JOIN kategorie k ON m.kategoria = k.id JOIN gatunki g ON m.gatunek = g.id WHERE m.id = %s" % (id,))
+    cur.execute("SELECT * FROM _towar WHERE m.id = %s" % (id,))
     co = cur.fetchone()
     return kto, co
 
