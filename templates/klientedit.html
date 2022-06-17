@@ -3,6 +3,10 @@
     Edycja klienta {{row[0]}}
 {% endblock title %}
 
+{% block head2 %}
+    <title>Edycja klienta {{row[0]}}</title>
+{% endblock head2 %}
+
 {% block content %}
     <form action="{{url_for('klientedit')}}" method="post">
         <div class="form-group">

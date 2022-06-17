@@ -10,15 +10,17 @@
     <script>
     $(function(){
         $("#co").select2();
+        $('#kto').select2();
         }); 
     </script>
+    <title>Nowe zamówienie</title>
 {% endblock head2 %}
 
 {% block content %}
     <form action="{{url_for('nowe_zamowienie')}}" method="post" onsubmit="return confirm('Na pewno? Suma: ' + cena()) + 'zł'">
         <div class="form-group">
             <label for="kto">Kto:</label>
-            <select name="kto" id="kto" class="form-control" data-live-search="true" required>
+            <select name="kto" id="kto" class="form-control" required>
                 {% for kto in kto %}
                     <option value="{{kto[0]}}">{{kto[1]}}</option>
                 {% endfor %}

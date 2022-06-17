@@ -3,6 +3,10 @@
     Dodawanie klienta
 {% endblock title %}
 
+{% block head2 %}
+<title>Dodawanie klienta</title>
+{% endblock head2 %}
+
 {% block content %}
     <form action="{{url_for('klientdod')}}" method="post">
         <div class="form-group">

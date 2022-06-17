@@ -3,6 +3,10 @@
     Edycja towaru
 {% endblock title %}
 
+{% block head2 %}
+    <title>Edycja towaru</title>
+{% endblock head2 %}
+
 {% block content %}
     <form action="{{url_for('editmagazyn')}}" method="post">
         <div class="form-group">

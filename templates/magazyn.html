@@ -4,6 +4,10 @@
     Magazyn
 {% endblock title %}
 
+{% block head2 %}
+    <title>Magazyn</title>
+{% endblock head2 %}
+
 {% block content %}
     <table class="table table-striped">
     <thead>
@@ -20,7 +24,13 @@
                     <td>{{ col }}</td>
                 {% endfor %}
                 <td>
+                    <div class="btn-group">
                     <a href="{{ url_for('editmagazyn', id=row[0]) }}" class="btn">Edytuj</a>
+                    <form action="{{ url_for('usun') }}" method="GET">
+                        <input type="hidden" name="id" value="{{ row[0] }}">
+                        <input type="submit" class="btn btn-danger" value="Usuń">
+                    </form>
+                    </div>
             </tr>
         {% endfor %}
     </tbody>

@@ -3,6 +3,10 @@
     Dodawanie towaru
 {% endblock title %}
 
+{% block head2 %}
+    <title>Dodawanie towaru</title>
+{% endblock head2 %}
+
 {% block content %}
     <form action="{{url_for('dodaj')}}" method="post">
         <div class="form-group">
