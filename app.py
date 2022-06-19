@@ -3,7 +3,7 @@ import psycopg2
 
 app = Flask(__name__)
 
-conn = psycopg2.connect("dbname=db_g218 user=g218 password=C9C6_65fdf8 host=psql01.mikr.us")
+conn = psycopg2.connect("...")
 
 cur = conn.cursor()
 
